@@ -1,0 +1,36 @@
+Winamax Poker - CashGame - HandId: #18703805-691-1690720888 - Holdem no limit (0.25/0.50) - 2023/07/30 12:41:28 UTC
+Table: 'Corpus Christi 02' 5-max (play money) Seat #4 is the button
+Seat 2: WinterSound (12.50)
+Seat 3: MILOU-12- (56.76)
+Seat 4: WuForever (135.64)
+Seat 5: galactik78 (50.41)
+*** ANTE/BLINDS ***
+galactik78 posts small blind 0.25
+WinterSound posts big blind 0.50
+Dealt to WinterSound [6d Tc]
+*** PRE-FLOP *** 
+MILOU-12- calls 0.50
+WuForever folds
+galactik78 calls 0.25
+WinterSound checks
+*** FLOP *** [8d Ts Qc]
+galactik78 bets 1.50
+WinterSound calls 1.50
+MILOU-12- folds
+*** TURN *** [8d Ts Qc][Ah]
+galactik78 checks
+WinterSound checks
+*** RIVER *** [8d Ts Qc Ah][5s]
+galactik78 bets 1.13
+WinterSound calls 1.13
+*** SHOW DOWN ***
+galactik78 shows [7h Js] (High card : Ace)
+WinterSound shows [6d Tc] (One pair : Tens)
+WinterSound collected 6.37 from pot
+*** SUMMARY ***
+Total pot 6.37 | Rake 0.39
+Board: [8d Ts Qc Ah 5s]
+Seat 2: WinterSound (big blind) showed [6d Tc] and won 6.37 with One pair : Tens
+Seat 5: galactik78 (small blind) showed [7h Js] and lost with High card : Ace
+
+

@@ -1,0 +1,28 @@
+Winamax Poker - Tournament "Expresso" buyIn: 9.30 + 0.70 level: 1 - HandId: #2938104865684979713-1-1690720406 - Holdem no limit (10/20) - 2023/07/30 12:33:26 UTC
+Table: 'Expresso(684080847)#0' 3-max (play money) Seat #1 is the button
+Seat 1: Carapute21 (500)
+Seat 2: WinterSound (500)
+Seat 3: eric Lord278 (500)
+*** ANTE/BLINDS ***
+WinterSound posts small blind 10
+eric Lord278 posts big blind 20
+Dealt to WinterSound [6s 8s]
+*** PRE-FLOP *** 
+Carapute21 folds
+WinterSound raises 30 to 50
+eric Lord278 raises 30 to 80
+WinterSound calls 30
+*** FLOP *** [Qh 3s Kh]
+WinterSound checks
+eric Lord278 checks
+*** TURN *** [Qh 3s Kh][3c]
+WinterSound checks
+eric Lord278 bets 160
+WinterSound folds
+eric Lord278 collected 320 from pot
+*** SUMMARY ***
+Total pot 320 | No rake
+Board: [Qh 3s Kh 3c]
+Seat 3: eric Lord278 (big blind) won 320
+
+

@@ -1,0 +1,27 @@
+Winamax Poker - CashGame - HandId: #18703848-678-1690722475 - Holdem no limit (0.25/0.50) - 2023/07/30 13:07:55 UTC
+Table: 'Corpus Christi 03' 5-max (play money) Seat #2 is the button
+Seat 2: cg2min (29.96)
+Seat 3: _juju83_ (76.49)
+Seat 4: WinterSound (20)
+Seat 5: TOMMY 80 (54.57)
+*** ANTE/BLINDS ***
+_juju83_ posts small blind 0.25
+WinterSound posts big blind 0.50
+Dealt to WinterSound [3s 5s]
+*** PRE-FLOP *** 
+cg2min calls 0.50
+_juju83_ folds
+WinterSound checks
+*** FLOP *** [4d Jh 2d]
+WinterSound checks
+cg2min checks
+*** TURN *** [4d Jh 2d][Ah]
+WinterSound bets 0.81
+cg2min folds
+WinterSound collected 1.99 from pot
+*** SUMMARY ***
+Total pot 1.99 | Rake 0.07
+Board: [4d Jh 2d Ah]
+Seat 4: WinterSound (big blind) won 1.99
+
+
