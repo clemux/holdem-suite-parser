@@ -1,5 +1,5 @@
 use std::fmt;
-use std::fmt::Display;
+use std::fmt::{Display, Formatter};
 
 use chrono::prelude::*;
 use nom::branch::alt;
@@ -10,8 +10,8 @@ use nom::multi::{many0, many1, many_till, separated_list0, separated_list1};
 use nom::number::complete::double;
 use nom::sequence::{delimited, pair, preceded, separated_pair, terminated, tuple, Tuple};
 use nom::{IResult, Parser};
-use pyo3::{IntoPy, pyclass, PyObject, Python};
-use pyo3::types::PyString;
+use pyo3::{IntoPy, pyclass, pymethods, PyObject, PyResult, Python};
+use pyo3::types::{PyFloat, PyString};
 use serde::Serialize;
 
 #[pyclass(module = "holdem_suite_parser", get_all)]
@@ -163,7 +163,7 @@ impl IntoPy<PyObject> for PokerType {
 }
 
 #[pyclass(module = "holdem_suite_parser", get_all)]
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct HandInfo {
     pub game_info: GameInfo,
     pub hand_id: String,
@@ -216,7 +216,7 @@ fn parse_table_name_tournament(input: &str) -> IResult<&str, TableName> {
     ))
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum TableName {
     Tournament(String, u32, u32),
     CashGame(String),
@@ -237,7 +237,24 @@ impl TableName {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+impl Display for TableName {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let table_name = match self {
+            TableName::Tournament(name, tournament_id, table_id) =>  name,
+            TableName::CashGame(name) => name,
+        };
+        write!(f, "{}", table_name)
+    }
+}
+
+impl IntoPy<PyObject> for TableName {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+        PyString::new(py, &self.to_string()).into()
+    }
+}
+
+
+#[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(tag = "type")]
 pub enum MoneyType {
     RealMoney,
@@ -258,7 +275,24 @@ impl MoneyType {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+impl Display for MoneyType {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let money_type = match self {
+            MoneyType::PlayMoney => "play_money",
+            MoneyType::RealMoney => "real_money",
+        };
+        write!(f, "{}", money_type)
+    }
+}
+
+impl IntoPy<PyObject> for MoneyType {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+       PyString::new(py, &self.to_string()).into()
+    }
+}
+
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct TableInfo {
     pub table_name: TableName,
     pub max_players: u32,
@@ -291,7 +325,8 @@ impl TableInfo {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct Seat {
     pub seat_number: u32,
     pub player_name: String,
@@ -338,7 +373,7 @@ fn parse_amount(input: &str) -> IResult<&str, f64> {
     Ok((input, amount))
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum PostType {
     BigBlind(f64),
     SmallBlind(f64),
@@ -361,7 +396,7 @@ impl PostType {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 #[serde(tag = "type")]
 pub enum ActionType {
     Bet { amount: f64 },
@@ -426,7 +461,8 @@ impl fmt::Display for ActionType {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[pyclass(module = "holdem_suite_parser")]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct Action {
     pub player_name: String,
     pub action: ActionType,
@@ -446,6 +482,33 @@ impl Action {
                 is_all_in: all_in.is_some(),
             },
         ))
+    }
+}
+
+
+#[pymethods]
+impl Action {
+    #[getter]
+    fn player_name(&self) -> PyResult<String> {
+        Ok(self.player_name.to_owned())
+    }
+
+
+    #[getter]
+    fn action_type(&self) -> PyResult<String> {
+        Ok(self.action.to_string())
+    }
+
+    #[getter]
+    fn action_amount(&self) -> PyResult<Option<f64>> {
+        let amount = match self.action {
+            ActionType::Bet {amount} => Some(amount),
+            ActionType::Call {amount} => Some(amount),
+            ActionType::Raise {to_call: _, amount} => Some(amount),
+            _ => None,
+        };
+        Ok(amount)
+
     }
 }
 
@@ -620,7 +683,7 @@ impl HoleCards {
 
 
 #[pyclass(module = "holdem_suite_parser", get_all)]
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct DealtToHero {
     pub player_name: String,
     pub hole_cards: HoleCards,
@@ -644,7 +707,7 @@ impl DealtToHero {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum StreetType {
     Preflop,
     Flop,
@@ -669,7 +732,14 @@ impl fmt::Display for StreetType {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+impl IntoPy<PyObject> for StreetType {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+       PyString::new(py, &self.to_string()).into()
+    }
+}
+
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct Street {
     pub street_type: StreetType,
     pub actions: Vec<Action>,
@@ -700,7 +770,8 @@ impl Street {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct Board {
     pub cards: Vec<Option<Card>>,
 }
@@ -718,14 +789,23 @@ impl Board {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
-#[serde(tag = "type")]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum SummaryResult {
     Won(f64),
     Lost,
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+impl IntoPy<PyObject> for SummaryResult {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+        let amount = match self {
+            SummaryResult::Won(amount) => amount,
+            SummaryResult::Lost => 0.0
+        };
+       PyFloat::new(py, amount).into()
+    }
+}
+
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub enum HandCategory {
     HighCard(Rank),
     Pair(Rank),
@@ -800,7 +880,14 @@ impl HandCategory {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+impl IntoPy<PyObject> for HandCategory {
+    fn into_py(self, py: Python<'_>) -> PyObject {
+       PyString::new(py, "Not implemented").into()
+    }
+}
+
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct SummaryPlayer {
     pub name: String,
     pub seat: u32,
@@ -844,7 +931,8 @@ impl SummaryPlayer {
     }
 }
 
-#[derive(Debug, PartialEq, Serialize)]
+#[pyclass(module = "holdem_suite_parser", get_all)]
+#[derive(Debug, PartialEq, Serialize, Clone)]
 pub struct Summary {
     pub pot: f64,
     pub rake: Option<f64>,
@@ -878,7 +966,7 @@ impl Summary {
     }
 }
 
-#[pyclass]
+#[pyclass(module = "holdem_suite_parser", get_all)]
 #[derive(Debug, PartialEq, Serialize)]
 pub struct Hand {
     pub hand_info: HandInfo,
