@@ -665,6 +665,16 @@ impl fmt::Display for Card {
     }
 }
 
+#[pymethods]
+impl Card {
+    fn __repr__(&self) -> String {
+        self.to_string()
+    }
+
+    fn __str__(&self) -> String {
+        self.to_string()
+    }
+}
 
 #[pyclass(module = "holdem_suite_parser", get_all)]
 #[derive(Debug, PartialEq, Serialize, Clone)]
