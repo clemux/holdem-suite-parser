@@ -240,8 +240,8 @@ impl TableName {
 impl Display for TableName {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let table_name = match self {
-            TableName::Tournament(name, tournament_id, table_id) =>  name,
-            TableName::CashGame(name) => name,
+            TableName::Tournament(name, tournament_id, table_id) =>  format!("{}", tournament_id),
+            TableName::CashGame(name) => format!("{}", name),
         };
         write!(f, "{}", table_name)
     }
