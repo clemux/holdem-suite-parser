@@ -9,7 +9,7 @@ class TableInfo:
 class Blinds:
     ante: float | None
     small_blind: float
-    big_bling: float
+    big_blind: float
 
 class HandInfo:
     game_info: str
@@ -51,7 +51,6 @@ class SummaryPlayer:
     seat: int
     hole_cards: HoleCards | None
     result: float
-
 
 
 class Board:
